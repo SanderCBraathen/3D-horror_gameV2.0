@@ -1,0 +1,123 @@
+[gd_scene load_steps=12 format=3 uid="uid://kdixwllajs7b"]
+
+[ext_resource type="Script" path="res://Wood_Door_01_Unlocked.gd" id="1_y16di"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jl7um"]
+size = Vector3(2, 2.5, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_makyy"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vmhmq"]
+material = SubResource("StandardMaterial3D_makyy")
+size = Vector3(0.1, 0.2, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_op21n"]
+albedo_color = Color(0.666711, 0.354957, 0.177402, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rpbxp"]
+material = SubResource("StandardMaterial3D_op21n")
+size = Vector3(2, 2.5, 0.1)
+
+[sub_resource type="Animation" id="Animation_7lyne"]
+resource_name = "Close"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hinge:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1.48353, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_j538j"]
+resource_name = "Locked_open_attempt"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hinge:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.0349066, 0), Vector3(0, 0, 0), Vector3(0, 0.0174533, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_2ind6"]
+resource_name = "Open"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hinge:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 1.48353, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_5ghho"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hinge:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_i6rl3"]
+_data = {
+"Close": SubResource("Animation_7lyne"),
+"Locked_open_attempt": SubResource("Animation_j538j"),
+"Open": SubResource("Animation_2ind6"),
+"RESET": SubResource("Animation_5ghho")
+}
+
+[node name="Wood_Door_01_Unlocked" type="Node3D"]
+
+[node name="Hinge" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Hinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+script = ExtResource("1_y16di")
+prompt_message = " "
+prompt_input = "E"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hinge/StaticBody3D"]
+shape = SubResource("BoxShape3D_jl7um")
+
+[node name="Knob" type="MeshInstance3D" parent="Hinge/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.76923, -0.209894, 0)
+mesh = SubResource("BoxMesh_vmhmq")
+skeleton = NodePath("../Door")
+
+[node name="Door" type="MeshInstance3D" parent="Hinge/StaticBody3D"]
+mesh = SubResource("BoxMesh_rpbxp")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_i6rl3")
+}
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+
+[connection signal="interacted" from="Hinge/StaticBody3D" to="Hinge/StaticBody3D" method="_on_interacted"]
