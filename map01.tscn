@@ -1,0 +1,64 @@
+[gd_scene load_steps=6 format=3 uid="uid://c1gf5gnoo6y4"]
+
+[ext_resource type="PackedScene" uid="uid://bey2o2g8p2lh1" path="res://Simple 1st person/player.tscn" id="1_3e4vv"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_71n1y"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_5sl38"]
+sky_material = SubResource("ProceduralSkyMaterial_71n1y")
+
+[sub_resource type="Environment" id="Environment_i7s13"]
+background_mode = 2
+background_energy_multiplier = 0.0
+sky = SubResource("Sky_5sl38")
+tonemap_mode = 2
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
+glow_enabled = true
+volumetric_fog_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xivjf"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[node name="Map" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_i7s13")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+light_energy = 0.0
+shadow_enabled = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.417963, 0)
+use_collision = true
+flip_faces = true
+size = Vector3(10, 5, 10)
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("1_3e4vv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.95316, -1.78777, 3.72521)
+MOUSE_SENSITIVITY = 0.1
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.587347, -3.69735)
+size = Vector3(1, 1, 0.903809)
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="CSGBox3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.348228, 0.29359, 0.458168)
+radius = 0.1
+material = SubResource("StandardMaterial3D_xivjf")
+
+[node name="CSGSphere3D2" type="CSGSphere3D" parent="CSGBox3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28593, 0.29359, 0.458168)
+radius = 0.1
+material = SubResource("StandardMaterial3D_xivjf")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGBox3D2"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -0.0834316, 0.474318)
+radius = 0.1
+height = 0.5
+material = SubResource("StandardMaterial3D_xivjf")
